@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 09, 2025 at 07:01 PM
+-- Generation Time: Aug 12, 2025 at 10:26 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,11 +29,22 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `aids` (
   `id` int(11) NOT NULL,
-  `member_id` int(11) NOT NULL,
-  `amount` decimal(10,2) DEFAULT 0.00,
-  `item_id` int(11) DEFAULT NULL,
-  `aid_date` date DEFAULT NULL
+  `donor_id` int(11) NOT NULL,
+  `death_id` int(11) NOT NULL,
+  `total_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `donation_date` date NOT NULL,
+  `notes` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `aids`
+--
+
+INSERT INTO `aids` (`id`, `donor_id`, `death_id`, `total_amount`, `donation_date`, `notes`, `created_at`) VALUES
+(4, 14, 16, 30000.00, '2025-07-31', 'Hand over to 50000 Lkr', '2025-08-09 19:51:28'),
+(5, 15, 17, 12500.00, '2025-08-10', 'Handing over Mr:kasun Perera', '2025-08-09 21:59:36'),
+(6, 17, 18, 18000.00, '2025-06-11', '', '2025-08-09 22:35:58');
 
 -- --------------------------------------------------------
 
@@ -65,6 +76,15 @@ CREATE TABLE `death` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `death`
+--
+
+INSERT INTO `death` (`id`, `reg_no`, `person_name`, `date_of_death`, `cause_of_death`, `notes`, `created_at`) VALUES
+(16, '700000000V', 'Saman Kumara', '2025-07-31', 'an accident', 'Funeral Date - 2025.08.02', '2025-08-09 19:49:02'),
+(17, '800000000V', 'Indika Sadaruvan', '2025-08-10', 'an accident', 'funeral date - 2025.08.13', '2025-08-09 21:58:03'),
+(18, '911111111V', 'Nimal Dayarathna', '2025-06-11', 'an accident', '', '2025-08-09 22:35:22');
+
 -- --------------------------------------------------------
 
 --
@@ -78,7 +98,6 @@ CREATE TABLE `donations` (
   `item_id` int(11) NOT NULL,
   `donation_qty` int(11) NOT NULL,
   `donation_date` date NOT NULL,
-  `amount` decimal(10,2) DEFAULT 0.00,
   `returned_qty` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -86,23 +105,43 @@ CREATE TABLE `donations` (
 -- Dumping data for table `donations`
 --
 
-INSERT INTO `donations` (`id`, `member_id`, `death_id`, `item_id`, `donation_qty`, `donation_date`, `amount`, `returned_qty`) VALUES
-(2, 11, NULL, 5, 2, '2025-08-09', 0.00, 2),
-(3, 11, NULL, 2, 50, '2025-08-09', 0.00, 50),
-(4, 11, NULL, 3, 10, '2025-08-09', 0.00, 10),
-(5, 11, NULL, 5, 2, '2025-08-09', 0.00, 2),
-(6, 11, NULL, 2, 50, '2025-08-09', 0.00, 50),
-(7, 11, NULL, 3, 10, '2025-08-09', 0.00, 10),
-(8, 11, NULL, 5, 4, '2025-08-09', 0.00, 4),
-(9, 11, NULL, 2, 50, '2025-08-09', 0.00, 50),
-(10, 11, NULL, 3, 10, '2025-08-09', 0.00, 10),
-(11, 13, NULL, 5, 1, '2025-08-09', 0.00, 1),
-(12, 13, NULL, 2, 25, '2025-08-09', 0.00, 25),
-(13, 13, NULL, 3, 5, '2025-08-09', 0.00, 5),
-(14, 12, NULL, 2, 20, '2025-07-01', 0.00, 20),
-(15, 12, NULL, 3, 2, '2025-07-01', 0.00, 2),
-(16, 12, NULL, 2, 20, '2025-07-01', 0.00, 20),
-(17, 12, NULL, 3, 2, '2025-07-01', 0.00, 2);
+INSERT INTO `donations` (`id`, `member_id`, `death_id`, `item_id`, `donation_qty`, `donation_date`, `returned_qty`) VALUES
+(54, 14, 16, 14, 2, '2025-07-31', 2),
+(55, 14, 16, 13, 10, '2025-07-31', 10),
+(56, 14, 16, 11, 10, '2025-07-31', 10),
+(57, 14, 16, 12, 10, '2025-07-31', 10),
+(68, 15, 17, 14, 1, '2025-08-10', 0),
+(69, 15, 17, 13, 10, '2025-08-10', 0),
+(70, 15, 17, 11, 2, '2025-08-10', 0),
+(71, 15, 17, 12, 2, '2025-08-10', 0),
+(72, 17, 18, 14, 2, '2025-06-11', 0),
+(73, 17, 18, 13, 5, '2025-06-11', 0),
+(74, 17, 18, 11, 5, '2025-06-11', 0),
+(75, 17, 18, 12, 5, '2025-06-11', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `events`
+--
+
+CREATE TABLE `events` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `event_date` date NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `events`
+--
+
+INSERT INTO `events` (`id`, `title`, `description`, `event_date`, `created_at`) VALUES
+(1, 'Meeting', 'Meeting at Conference Hall in Mathle', '2025-08-15', '2025-08-12 20:19:50'),
+(2, 'Funeral', 'Mr. Sampath (Reg Number 13) Past away at 2025.08.10 and Funeral in Cemetery in Matale', '2025-08-15', '2025-08-12 20:21:43'),
+(3, 'Meeting', 'Sample Meeting', '2025-08-22', '2025-08-12 20:22:09'),
+(4, 'Sample', 'Sample', '2025-08-04', '2025-08-12 20:23:03');
 
 -- --------------------------------------------------------
 
@@ -122,9 +161,10 @@ CREATE TABLE `inventory` (
 --
 
 INSERT INTO `inventory` (`id`, `item_name`, `total_qty`, `current_qty`) VALUES
-(2, 'Chair', 100, 100),
-(3, 'Table', 20, 20),
-(5, 'Canopies', 5, 5);
+(11, 'Table', 20, 13),
+(12, 'Table Umbrella', 20, 13),
+(13, 'Chair', 20, 5),
+(14, 'Canopies', 10, 7);
 
 -- --------------------------------------------------------
 
@@ -152,9 +192,10 @@ CREATE TABLE `members` (
 --
 
 INSERT INTO `members` (`id`, `reg_no`, `full_name`, `address`, `dob`, `nic`, `joined_date`, `phone`, `photo`, `email`, `status`, `gender`) VALUES
-(11, '1', 'A.B Silva', 'a', '2000-08-14', '723642585V', '2025-08-01', '0784561238', NULL, 'sample@gmail.com', 'active', 'Male'),
-(12, '2', 'Saman Kumara', 'ww', '1995-08-07', '75894589V', '2025-08-01', '0784561238', NULL, 'sss@gmail.com', 'active', ''),
-(13, '3', 'Kasuni Uthpala', 'dd', '1975-08-21', '222222222V', '2023-08-21', '0777123456', NULL, 'sss@gmail.com', 'active', 'Female');
+(14, '1', 'Jhon Saparamadu', '7/2, Kalaniya', '1970-08-24', '700000000V', '2024-08-01', '1111111111', NULL, 'sample@gmail.com', 'active', 'Male'),
+(15, '2', 'Kasun Perera', '2/87, Grandpass, Colombo 12', '1980-08-03', '723642585V', '2021-08-26', '2222222222', NULL, 'sample@gmail.com', 'active', 'Male'),
+(16, '3', 'Kasuni Uthpala', '125/54, Gothtuwa, colombo', '1965-08-19', '655555555V', '2020-07-15', '3333333333', NULL, 'sample@gmail.com', 'active', 'Female'),
+(17, '4', 'Nimal Dayarathna', 'No8, Katunayake', '1991-08-05', '911111111V', '2019-07-27', '7777777777', NULL, 'sample@gmail.com', 'active', 'Male');
 
 -- --------------------------------------------------------
 
@@ -192,9 +233,10 @@ CREATE TABLE `relations` (
 --
 
 INSERT INTO `relations` (`id`, `reg_no`, `full_name`, `address`, `dob`, `nic`, `phone`, `gender`, `relation_type`) VALUES
-(3, '1', 'Kasuni Perera', 'aa', '2025-08-07', 'no', 'no', 'Male', 'Child'),
-(4, '1', 'Ranjani P Perera', 'ss', '2025-08-01', 'no', 'no', 'Female', 'Child'),
-(5, '3', 'Nirmali Shanthi', 'ggg', '1990-08-14', '723642585V', '1234567891', 'Female', 'Spouse');
+(6, '1', 'Saman Kumara', '7/2, Kalaniya', '1995-08-05', '779777777V', '255555555', 'Male', 'Child'),
+(7, '1', 'Ranjan Perera', '7/2, Kalaniya', '1995-08-27', '980000000V', '5555555555', 'Male', 'Child'),
+(8, '2', 'Indika Sadaruvan', '2/87, Grandpass, Colombo 12', '1995-09-02', '955555555V', '5555555555', 'Male', 'Child'),
+(10, '1', 'Kasuni Tharanga', '7/2, Kalaniya', '1998-07-31', '77777777', '7777777777', 'Female', 'Parent');
 
 -- --------------------------------------------------------
 
@@ -215,8 +257,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `role`, `name`) VALUES
-(1, 'admin', 'admin123', 'admin', 'Lahiru Perera'),
-(3, 'Lahiru', 'R123456', 'user', 'Randima Perera');
+(1, 'admin', 'admin123', 'admin', 'Lahiru Perera');
 
 --
 -- Indexes for dumped tables
@@ -227,8 +268,7 @@ INSERT INTO `users` (`id`, `username`, `password`, `role`, `name`) VALUES
 --
 ALTER TABLE `aids`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `member_id` (`member_id`),
-  ADD KEY `item_id` (`item_id`);
+  ADD KEY `death_id` (`death_id`);
 
 --
 -- Indexes for table `contributions`
@@ -250,6 +290,12 @@ ALTER TABLE `donations`
   ADD PRIMARY KEY (`id`),
   ADD KEY `member_id` (`member_id`),
   ADD KEY `item_id` (`item_id`);
+
+--
+-- Indexes for table `events`
+--
+ALTER TABLE `events`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `inventory`
@@ -292,7 +338,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `aids`
 --
 ALTER TABLE `aids`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `contributions`
@@ -304,25 +350,31 @@ ALTER TABLE `contributions`
 -- AUTO_INCREMENT for table `death`
 --
 ALTER TABLE `death`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `donations`
 --
 ALTER TABLE `donations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+
+--
+-- AUTO_INCREMENT for table `events`
+--
+ALTER TABLE `events`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `members`
 --
 ALTER TABLE `members`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `member_relations`
@@ -334,7 +386,7 @@ ALTER TABLE `member_relations`
 -- AUTO_INCREMENT for table `relations`
 --
 ALTER TABLE `relations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -350,8 +402,7 @@ ALTER TABLE `users`
 -- Constraints for table `aids`
 --
 ALTER TABLE `aids`
-  ADD CONSTRAINT `aids_ibfk_1` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
-  ADD CONSTRAINT `aids_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `inventory` (`id`);
+  ADD CONSTRAINT `aids_ibfk_1` FOREIGN KEY (`death_id`) REFERENCES `death` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `contributions`
